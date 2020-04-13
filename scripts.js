@@ -52,6 +52,7 @@ for(var i = 0; i < HOURS_IN_DAY; i++) {
 	$("#end-hour").append(endOption);
 }
 
+// Check localStorage for starting and ending times, if none set to defaults
 if(localStorage.getItem("startHour") !== null) {
 	startHour.selectedIndex = parseInt(localStorage.getItem("startHour"));
 } else {
@@ -70,6 +71,13 @@ pastPresentFuture();
 $(document).ready(function() {
 	// Function to save text content when lock button is clicked
 	$(".saveBtn").click(function() {
+		// Change icon to locked if unlocked, to unlocked if locked
+		if(this.children[0].classList.contains("fa-lock-open")) {
+			this.innerHTML = "<i class=\"fas fa-lock\"></i>";
+		} else {
+			this.innerHTML = "<i class=\"fas fa-lock-open\"></i>";
+		}
+
 		// Get hour-data from parent time-block
 		var hourToSave = parseInt(this.parentElement.getAttribute("data-hour"));
 		
@@ -112,10 +120,11 @@ function pastPresentFuture() {
 	});
 }
 
+// Function to automatically make timeblocks for all user included hours
 function populateTimeBlock(start, end) {
 	$("#schedule-container").empty();
-	if(start <= end) {
 
+	if(start <= end) { // For times that dont cross midnight
 		for(var i = start; i <= end; i++) {
 			var hourDisplay = $("<div>");
 			hourDisplay.addClass("col-2 col-md-1 textarea hour");
@@ -127,6 +136,42 @@ function populateTimeBlock(start, end) {
 				hourDisplay.text("12 PM");
 			} else {
 				hourDisplay.text((i - 12) + " PM");
+			}
+
+			var hourItems = $("<p>");
+			hourItems.addClass("col-8 col-md-10 textarea description");
+			hourItems.attr("contentEditable", "true");
+
+			var lockBtn = $("<button>");
+			lockBtn.addClass("col-2 col-md-1 btn saveBtn");
+			lockBtn.html("<i class=\"fas fa-lock-open\">");
+
+			var timeBlock = $("<div>");
+			timeBlock.addClass("row time-block");
+			timeBlock.attr("data-hour", i);
+
+			timeBlock.append(hourDisplay);
+			timeBlock.append(hourItems);
+			timeBlock.append(lockBtn);
+
+			$("#schedule-container").append(timeBlock);
+		}
+	} else { // For times that cross midnight
+		for(var i = start; i <= (end + 24); i++) {
+			var hourDisplay = $("<div>");
+			hourDisplay.addClass("col-2 col-md-1 textarea hour");
+			if(i === 0 || i === 24) {
+				hourDisplay.text("12 AM");
+			} else if(0 < i && i < 12) {
+				hourDisplay.text(i + " AM");
+			} else if(i === 12 || i === 36) {
+				hourDisplay.text("12 PM");
+			} else if(12 < i && i < 24) {
+				hourDisplay.text((i - 12) + " PM");
+			} else if(24 < i && i < 36) {
+				hourDisplay.text((i - 24) + " AM");
+			} else {
+				hourDisplay.text((i - 36) + " PM");
 			}
 
 			var hourItems = $("<p>");
