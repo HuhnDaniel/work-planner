@@ -24,15 +24,15 @@ for(var i = 0; i < HOURS_IN_DAY; i++) {
 			startOption.text("12 AM");
 			endOption.text("12 AM");
 		break;
-		case 9:
 		case 1:
-		case 2:
+			case 2:
 		case 3:
 		case 4:
 		case 5:
 		case 6:
 		case 7:
 		case 8:
+		case 9:
 		case 10:
 		case 11:
 			startOption.text(i + " AM");
@@ -42,8 +42,6 @@ for(var i = 0; i < HOURS_IN_DAY; i++) {
 			startOption.text("12 PM");
 			endOption.text("12 PM");
 		break;
-		case 17:
-			endOption.attr("selected", true);
 		default:
 			startOption.text((i - 12) + " PM");
 			endOption.text((i - 12) + " PM");
@@ -64,6 +62,8 @@ if(localStorage.getItem("endHour") !== null) {
 } else {
 	endHour.selectedIndex = 17;
 }
+
+populateTimeBlock(startHour.selectedIndex, endHour.selectedIndex);
 
 // Function to determine what blocks are past present and future and to populate list with text out of localStorage
 $(".time-block").toArray().forEach(function(block) {
@@ -94,5 +94,45 @@ $(document).ready(function() {
 		// Save array to localStorage
 		localStorage.setItem("hourlyContent", hourlyContent.toString());
 	});
-	
+
+	// Function to change hours, as well as save hour changes to localStorage
+	$("#start-hour").change(function() {
+		console.log("changed");
+	});
 });
+
+function populateTimeBlock(start, end) {
+	if(start <= end) {
+		for(var i = start; i <= end; i++) {
+			var hourDisplay = $("<div>");
+			hourDisplay.addClass("col-2 col-md-1 textarea hour");
+			if(i === 0) {
+				hourDisplay.text("12 AM");
+			} else if (0 < i && i < 12) {
+				hourDisplay.text(i + " AM");
+			} else if (i === 12) {
+				hourDisplay.text("12 PM");
+			} else {
+				hourDisplay.text((i - 12) + " PM");
+			}
+
+			var hourItems = $("<p>");
+			hourItems.addClass("col-8 col-md-10 textarea description");
+			hourItems.attr("contentEditable", "true");
+
+			var lockBtn = $("<button>");
+			lockBtn.addClass("col-2 col-md-1 btn saveBtn");
+			lockBtn.html("<i class=\"fas fa-lock-open\">");
+
+			var timeBlock = $("<div>");
+			timeBlock.addClass("row time-block");
+			timeBlock.attr("data-hour", i);
+
+			timeBlock.append(hourDisplay);
+			timeBlock.append(hourItems);
+			timeBlock.append(lockBtn);
+
+			$("#schedule-container").append(timeBlock);
+		}
+	}
+}
