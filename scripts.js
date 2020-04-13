@@ -1,5 +1,7 @@
 var hourlyContent = [];
 var HOURS_IN_DAY = 24;
+var startHour = document.getElementById("start-hour");
+var endHour = document.getElementById("end-hour");
 
 // If there is hourlyContent data in localStorage, put it in an array
 if(localStorage.getItem("hourlyContent") !== null) {
@@ -23,7 +25,6 @@ for(var i = 0; i < HOURS_IN_DAY; i++) {
 			endOption.text("12 AM");
 		break;
 		case 9:
-			startOption.attr("selected", true);
 		case 1:
 		case 2:
 		case 3:
@@ -53,6 +54,16 @@ for(var i = 0; i < HOURS_IN_DAY; i++) {
 	$("#end-hour").append(endOption);
 }
 
+if(localStorage.getItem("startHour") !== null) {
+	startHour.selectedIndex = parseInt(localStorage.getItem("startHour"));
+} else {
+	startHour.selectedIndex = 9;
+}
+if(localStorage.getItem("endHour") !== null) {
+	endHour.selectedIndex = parseInt(localStorage.getItem("endHour"));
+} else {
+	endHour.selectedIndex = 17;
+}
 
 // Function to determine what blocks are past present and future and to populate list with text out of localStorage
 $(".time-block").toArray().forEach(function(block) {
@@ -83,4 +94,5 @@ $(document).ready(function() {
 		// Save array to localStorage
 		localStorage.setItem("hourlyContent", hourlyContent.toString());
 	});
+	
 });
