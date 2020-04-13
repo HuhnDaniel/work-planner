@@ -69,8 +69,23 @@ populateTimeBlock(startHour.selectedIndex, endHour.selectedIndex);
 pastPresentFuture();
 
 $(document).ready(function() {
+	
+	// Function to change start hours, as well as save hour changes to localStorage
+	$("#start-hour").change(function() {
+		localStorage.setItem("startHour", startHour.selectedIndex);
+		populateTimeBlock(startHour.selectedIndex, endHour.selectedIndex);
+		pastPresentFuture();
+	});
+	
+	// Function to change end hours
+	$("#end-hour").change(function() {
+		localStorage.setItem("endHour", endHour.selectedIndex);
+		populateTimeBlock(startHour.selectedIndex, endHour.selectedIndex);
+		pastPresentFuture();
+	})
+
 	// Function to save text content when lock button is clicked
-	$(".saveBtn").click(function() {
+	$("#schedule-container").on("click", ".saveBtn", function() {
 		// Change icon to locked if unlocked, to unlocked if locked
 		if(this.children[0].classList.contains("fa-lock-open")) {
 			this.innerHTML = "<i class=\"fas fa-lock\"></i>";
@@ -88,20 +103,6 @@ $(document).ready(function() {
 		// Save array to localStorage
 		localStorage.setItem("hourlyContent", hourlyContent.toString());
 	});
-
-	// Function to change start hours, as well as save hour changes to localStorage
-	$("#start-hour").change(function() {
-		localStorage.setItem("startHour", startHour.selectedIndex);
-		populateTimeBlock(startHour.selectedIndex, endHour.selectedIndex);
-		pastPresentFuture();
-	});
-
-	// Function to change end hours
-	$("#end-hour").change(function() {
-		localStorage.setItem("endHour", endHour.selectedIndex);
-		populateTimeBlock(startHour.selectedIndex, endHour.selectedIndex);
-		pastPresentFuture();
-	})
 });
 
 // Function to determine what blocks are past present and future and to populate list with text out of localStorage
