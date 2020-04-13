@@ -65,21 +65,7 @@ if(localStorage.getItem("endHour") !== null) {
 
 populateTimeBlock(startHour.selectedIndex, endHour.selectedIndex);
 
-// Function to determine what blocks are past present and future and to populate list with text out of localStorage
-$(".time-block").toArray().forEach(function(block) {
-	// Check data hour against current 24-hour-time hour (negates the need for AM/PM checking)
-	if(parseInt(block.getAttribute("data-hour")) < parseInt(moment().format("HH"))) {
-		block.classList.add("past");
-	} else if(parseInt(block.getAttribute("data-hour")) === parseInt(moment().format("HH"))) {
-		block.classList.add("present");
-	} else {
-		block.classList.add("future");
-	}
-
-	block.children[1].textContent = hourlyContent[parseInt(block.getAttribute("data-hour"))];
-});
-
-
+pastPresentFuture();
 
 $(document).ready(function() {
 	// Function to save text content when lock button is clicked
@@ -95,14 +81,41 @@ $(document).ready(function() {
 		localStorage.setItem("hourlyContent", hourlyContent.toString());
 	});
 
-	// Function to change hours, as well as save hour changes to localStorage
+	// Function to change start hours, as well as save hour changes to localStorage
 	$("#start-hour").change(function() {
-		console.log("changed");
+		localStorage.setItem("startHour", startHour.selectedIndex);
+		populateTimeBlock(startHour.selectedIndex, endHour.selectedIndex);
+		pastPresentFuture();
 	});
+
+	// Function to change end hours
+	$("#end-hour").change(function() {
+		localStorage.setItem("endHour", endHour.selectedIndex);
+		populateTimeBlock(startHour.selectedIndex, endHour.selectedIndex);
+		pastPresentFuture();
+	})
 });
 
+// Function to determine what blocks are past present and future and to populate list with text out of localStorage
+function pastPresentFuture() {
+	$(".time-block").toArray().forEach(function(block) {
+		// Check data hour against current 24-hour-time hour (negates the need for AM/PM checking)
+		if(parseInt(block.getAttribute("data-hour")) < parseInt(moment().format("HH"))) {
+			block.classList.add("past");
+		} else if(parseInt(block.getAttribute("data-hour")) === parseInt(moment().format("HH"))) {
+			block.classList.add("present");
+		} else {
+			block.classList.add("future");
+		}
+
+		block.children[1].textContent = hourlyContent[parseInt(block.getAttribute("data-hour"))];
+	});
+}
+
 function populateTimeBlock(start, end) {
+	$("#schedule-container").empty();
 	if(start <= end) {
+
 		for(var i = start; i <= end; i++) {
 			var hourDisplay = $("<div>");
 			hourDisplay.addClass("col-2 col-md-1 textarea hour");
