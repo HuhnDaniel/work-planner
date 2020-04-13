@@ -15,9 +15,15 @@
     <header class="jumbotron">
       <h1 class="display-3">Work Day Scheduler</h1>
       <p class="lead">A simple calendar app for scheduling your work day</p>
-      <p id="currentDay" class="lead"></p>
+	  <p id="currentDay" class="lead"></p>
     </header>
     <div class="container">
+		<form class="row">
+			<label for="start-hour" class="col-2 offset-1 pt-2 text-right">Start hour:</label>
+			<select class="col-3 form-control" id="start-hour"></select>
+			<label for="end-hour" class="col-2 pt-2 text-right">End hour:</label>
+			<select class="col-3 form-control" id="end-hour"></select>
+		</form>
 		<div class="row time-block" data-hour="9">
 			<div class="col-2 col-md-1 textarea hour">9AM</div>
 			<p class="col-8 col-md-10 textarea description" contentEditable="true"></p>
@@ -34,7 +40,7 @@
 			<button class="col-2 col-md-1 btn saveBtn"><i class="fas fa-lock-open"></i></button>
 		</div>
 		<div class="row time-block" data-hour="12">
-			<div class="col-2 col-md-1 textarea hour">12AM</div>
+			<div class="col-2 col-md-1 textarea hour">12PM</div>
 			<p class="col-8 col-md-10 textarea description" contentEditable="true"></p>
 			<button class="col-2 col-md-1 btn saveBtn"><i class="fas fa-lock-open"></i></button>
 		</div>

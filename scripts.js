@@ -1,4 +1,6 @@
 var hourlyContent = [];
+var HOURS_IN_DAY = 24;
+
 // If there is hourlyContent data in localStorage, put it in an array
 if(localStorage.getItem("hourlyContent") !== null) {
 	hourlyContent = localStorage.getItem("hourlyContent").split(",")
@@ -6,6 +8,51 @@ if(localStorage.getItem("hourlyContent") !== null) {
 
 // Display current day month and year at top
 $("#currentDay").text(moment().format("dddd, MMMM Do, YYYY"));
+
+// Populate dropdown selectors with hours to chose from
+for(var i = 0; i < HOURS_IN_DAY; i++) {
+	var startOption = $("<option>");
+	var endOption = $("<option>");
+
+	startOption.attr("data-start", i);
+	endOption.attr("data-end", i);
+	
+	switch(i){
+		case 0:
+			startOption.text("12 AM");
+			endOption.text("12 AM");
+		break;
+		case 9:
+			startOption.attr("selected", true);
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 10:
+		case 11:
+			startOption.text(i + " AM");
+			endOption.text(i + " AM");
+		break;
+		case 12:
+			startOption.text("12 PM");
+			endOption.text("12 PM");
+		break;
+		case 17:
+			endOption.attr("selected", true);
+		default:
+			startOption.text((i - 12) + " PM");
+			endOption.text((i - 12) + " PM");
+		break;
+	}
+
+	$("#start-hour").append(startOption);
+	$("#end-hour").append(endOption);
+}
+
 
 // Function to determine what blocks are past present and future and to populate list with text out of localStorage
 $(".time-block").toArray().forEach(function(block) {
@@ -20,7 +67,6 @@ $(".time-block").toArray().forEach(function(block) {
 
 	block.children[1].textContent = hourlyContent[parseInt(block.getAttribute("data-hour"))];
 });
-
 
 
 
